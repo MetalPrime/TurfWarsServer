@@ -4,5 +4,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lbs/gson-2.8.6.jar"/>
 	<classpathentry kind="lib" path="lbs/core.jar"/>
+	<classpathentry kind="lib" path="lbs/controlP5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
