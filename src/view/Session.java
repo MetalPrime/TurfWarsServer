@@ -19,6 +19,11 @@ public class Session extends Thread{
 		this.socket = socket;
 	}
 	
+	public void setObserver(OnMessageListener observer) {
+		// TODO Auto-generated method stub
+		this.observer = observer;
+	}
+	
 	public void run() {
 		try {
 			InputStream is = socket.getInputStream();
@@ -34,7 +39,7 @@ public class Session extends Thread{
 	        	System.out.println("Esperando Mensaje");
 	        	String line = reader.readLine();
 	        	System.out.println("Recibido:"+" "+line);
-	        	observer.OnMessage(line);
+	        	this.observer.OnMessage(line);
 	        }
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -58,8 +63,5 @@ public class Session extends Thread{
 
     }
 	
-	public void setObserver(OnMessageListener observer) {
-		// TODO Auto-generated method stub
-		this.observer = observer;
-	}
+
 }

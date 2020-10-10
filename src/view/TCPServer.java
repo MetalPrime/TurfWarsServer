@@ -45,6 +45,7 @@ public class TCPServer extends Thread{
 				Socket socket = server.accept();
 				Session session = new Session(socket);
 				session.setObserver(observer);
+				session.start();
 				System.out.println("Conexión asegurada");
 			}
 	

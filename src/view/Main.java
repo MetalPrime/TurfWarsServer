@@ -23,6 +23,7 @@ public class Main extends PApplet implements OnMessageListener{
 	
 	public void draw() {
 		if(msg !=null) {
+			fill(0);
 			text(msg, 250, 250);
 		}
 	}
@@ -33,8 +34,9 @@ public class Main extends PApplet implements OnMessageListener{
 
 	@Override
 	public void OnMessage(String msg) {
-		// TODO Auto-generated method stub
 		
+		// TODO Auto-generated method stub
+		this.msg = msg;
 	}
 	
 	
