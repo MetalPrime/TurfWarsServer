@@ -1,4 +1,4 @@
-package view;
+package model;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class TCPServer extends Thread{
 	
@@ -17,7 +18,7 @@ public class TCPServer extends Thread{
 	
 	protected static TCPServer instanceUnique;
 	
-	protected static TCPServer getInstance() {
+	public static TCPServer getInstance() {
 		if(instanceUnique==null) {
 			instanceUnique = new TCPServer();
 			instanceUnique.start();
@@ -28,6 +29,7 @@ public class TCPServer extends Thread{
 	
 	private ServerSocket server;
 	private OnMessageListener observer;
+	private ArrayList<Session> sessions;
 	
 	public void setObserver(OnMessageListener observer) {
 		// TODO Auto-generated method stub
@@ -38,6 +40,7 @@ public class TCPServer extends Thread{
 	public void run() {
 		try {
 			System.out.println("Iniciando servidor");
+			sessions = new ArrayList<Session>();
 			server = new ServerSocket(5000);
 			
 			while(true) {
@@ -47,6 +50,7 @@ public class TCPServer extends Thread{
 				session.setObserver(observer);
 				session.start();
 				System.out.println("Conexión asegurada");
+				sessions.add(session);
 			}
 	
 			
@@ -56,6 +60,14 @@ public class TCPServer extends Thread{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public ArrayList<Session> getSessions() {
+		return sessions;
+	}
+
+	public void setSessions(ArrayList<Session> sessions) {
+		this.sessions = sessions;
 	}
 	
 

@@ -1,4 +1,4 @@
-package view;
+package model;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -8,8 +8,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.UUID;
+
+import com.google.gson.Gson;
 
 public class Session extends Thread{
+	
+	private String id;
 	private Socket socket;
 	private BufferedWriter writer;
 	private BufferedReader reader;
@@ -17,6 +22,7 @@ public class Session extends Thread{
 	
 	public Session(Socket socket) {
 		this.socket = socket;
+		this.id = UUID.randomUUID().toString();
 	}
 	
 	public void setObserver(OnMessageListener observer) {
@@ -39,7 +45,19 @@ public class Session extends Thread{
 	        	System.out.println("Esperando Mensaje");
 	        	String line = reader.readLine();
 	        	System.out.println("Recibido:"+" "+line);
-	        	this.observer.OnMessage(line);
+	        	
+	        	Gson gson = new Gson();
+	        	Generic generic = gson.fromJson(line, Generic.class);
+	        	
+	        	switch(generic.getType()) {
+	        	case  "Name":
+	        		Name name = gson.fromJson(line, Name.class);
+	        		this.observer.OnMessage(this,name.getName());
+	        		break;
+	        		
+	        	}
+	        	
+	        	//this.observer.OnMessage(line);
 	        }
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -62,6 +80,14 @@ public class Session extends Thread{
 
 
     }
+
+	public String getID() {
+		return id;
+	}
+
+	public void setID(String id) {
+		this.id = id;
+	}
 	
 
 }
