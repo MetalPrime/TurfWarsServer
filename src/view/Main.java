@@ -6,6 +6,7 @@ import model.Bullet;
 import model.Coordinate;
 import model.OnMessageListener;
 import model.Player;
+import model.PowerUp;
 import model.Session;
 import model.TCPServer;
 import processing.core.PApplet;
@@ -23,6 +24,7 @@ public class Main extends PApplet implements OnMessageListener{
 	private Gson gson;
 	private Player playerJ1;
 	private Player playerJ2;
+	private PowerUp prueba;
 	
 	private int x,y;
 	
@@ -36,7 +38,14 @@ public class Main extends PApplet implements OnMessageListener{
 		gson = new Gson();
 		
 		
-		playerJ1 = new Player(this, loadImage("./../media/img/PersonajeJ1.png"), msg, 50 );
+		if(tcp.getSessions().size()<2) {
+			
+			playerJ1 = new Player(this, loadImage("./../media/img/PersonajeJ1.png"), msg, 50, "Pistol" );
+		}
+		
+		prueba = new PowerUp(this, (int)random(0,2),(int) random(0,1200), (int)random(0,700));;
+		
+		
 			
 		
 	}
@@ -52,6 +61,12 @@ public class Main extends PApplet implements OnMessageListener{
 			}
 		}
 		
+		
+		
+		
+	}
+	
+	public void impactBullet() {
 		
 	}
 	

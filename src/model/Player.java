@@ -14,14 +14,16 @@ public class Player {
 	private int posY;
 	private int life;
 	private ArrayList<Bullet> bullets;
+	private String weapon;
 	
-	public Player(PApplet app, PImage img,String name,  int life) {
+	public Player(PApplet app, PImage img,String name,  int life, String weapon) {
 		super();
 		this.app = app;
 		this.img = img;
 		this.name = name;
 		this.bullets = new ArrayList<Bullet>();
 		this.life = life;
+		this.weapon = weapon;
 	}
 	
 	public  void paint(int posX, int posY) {
@@ -31,6 +33,21 @@ public class Player {
 		
 		for(int i = 0; i<this.bullets.size(); i++) {
 			app.ellipse(this.bullets.get(i).getPosX(), this.bullets.get(i).getPosY(), 50, 50);
+			switch(weapon) {
+			case "Pistol":
+				app.image(app.loadImage("./../media/img/ArmaPistola.png"), posX, posY);
+				this.bullets.get(i).setMov(3);
+				break;
+			case "Rifle":
+				app.image(app.loadImage("./../media/img/ArmaRifle.png"), posX, posY);
+				break;
+			case "Shotgun":
+				app.image(app.loadImage("./../media/img/ArmaEscopeta.png"), posX, posY);
+				break;
+			}
+			if(weapon.equals("Pistol")) {
+				app.image(img, posX, posY+30);
+			}
 			this.bullets.get(i).move();
 		}
 	}
@@ -84,6 +101,14 @@ public class Player {
 
 	public void setBullets(ArrayList<Bullet> bullets) {
 		this.bullets = bullets;
+	}
+
+	public String getWeapon() {
+		return weapon;
+	}
+
+	public void setWeapon(String weapon) {
+		this.weapon = weapon;
 	}
 	
 	
