@@ -1,6 +1,8 @@
 package model;
 
 public class Coordinate {
+	
+	private String type = "Coordinate";
     private int posX;
     private int posY;
 
@@ -28,4 +30,12 @@ public class Coordinate {
     public void setPosY(int posY) {
         this.posY = posY;
     }
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 }

@@ -1,5 +1,9 @@
 package view;
 
+import com.google.gson.Gson;
+
+import model.Bullet;
+import model.Coordinate;
 import model.OnMessageListener;
 import model.Player;
 import model.Session;
@@ -16,32 +20,39 @@ public class Main extends PApplet implements OnMessageListener{
 	private TCPServer tcp;
 	private String msg;
 	private Session session;
+	private Gson gson;
+	private Player playerJ1;
+	private Player playerJ2;
+	
+	private int x,y;
 	
 	public void settings() {
-		size(500,500);
+		size(1400,800);
 	}
 	
 	public void setup() {
 		tcp = TCPServer.getInstance();
 		tcp.setObserver(this);
+		gson = new Gson();
+		
+		
+		playerJ1 = new Player(this, loadImage("./../media/img/PersonajeJ1.png"), msg, 50 );
+			
+		
 	}
 	
 	public void draw() {
+		background(180);
 		if(msg !=null) {
 			fill(0);
-			text(msg, 250, 250);
-		}
-		
-		for(int i=0; i< tcp.getSessions().size(); i++) {
-			session = tcp.getSessions().get(i);
-			if(i%2==0) {
-				Player player = new Player(this, loadImage("./../media/img/PersonajeJ1.png"), msg, 130,250 ,50 );
-				player.paint();
-			} else {
-				Player player = new Player(this, loadImage("./../media/img/PersonajeJ2.png"), msg, 180,250 ,50 );
-				player.paint();
+			text(msg, x, y);
+			for(int i=0; i< tcp.getSessions().size(); i++) {
+				session = tcp.getSessions().get(i);
+				playerJ1.paint(x,y);
 			}
 		}
+		
+		
 	}
 	
 	public void mouseClicked() {
@@ -53,6 +64,23 @@ public class Main extends PApplet implements OnMessageListener{
 		
 		// TODO Auto-generated method stub
 		this.msg = msg+ " "+ s.getID();
+	}
+
+	@Override
+	public void newPosition(Session s, int x, int y) {
+		// TODO Auto-generated method stub
+		System.out.println(s.getID()+" "+x +"  " +y);
+		this.x = x;
+		this.y = y;
+		//System.out.println(x +" " + y);
+	}
+
+	@Override
+	public void newBullet(Bullet b) {
+		// TODO Auto-generated method stub
+		b.setPosX(x);
+		b.setPosY(y);
+		playerJ1.getBullets().add(b);
 	}
 	
 	

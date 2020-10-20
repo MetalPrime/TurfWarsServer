@@ -54,7 +54,14 @@ public class Session extends Thread{
 	        		Name name = gson.fromJson(line, Name.class);
 	        		this.observer.OnMessage(this,name.getName());
 	        		break;
-	        		
+	        	case "Coordinate":
+	        		Coordinate coord = gson.fromJson(line, Coordinate.class);
+	        		this.observer.newPosition(this, coord.getPosX(), coord.getPosY());
+	        		break;
+	        	case "Bullet":
+	        		Bullet bullet = gson.fromJson(line,Bullet.class);
+	        		this.observer.newBullet(bullet);
+	        		break;
 	        	}
 	        	
 	        	//this.observer.OnMessage(line);
