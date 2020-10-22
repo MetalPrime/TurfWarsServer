@@ -24,6 +24,7 @@ public class Main extends PApplet implements OnMessageListener{
 	private Gson gson;
 	private Player playerJ1;
 	private PowerUp prueba;
+	private boolean endGame;
 	
 	
 	public void settings() {
@@ -34,7 +35,7 @@ public class Main extends PApplet implements OnMessageListener{
 		tcp = TCPServer.getInstance();
 		tcp.setObserver(this);
 		gson = new Gson();
-		
+		endGame = false;
 		prueba = new PowerUp(this, (int)random(0,2),(int) random(0,200), (int)random(0,200));
 		
 	}
@@ -42,37 +43,46 @@ public class Main extends PApplet implements OnMessageListener{
 	public void draw() {
 		background(180);
 		//veo quien esta conetado
-		for(int i=0; i< tcp.getSessions().size(); i++) {
-			//esto es para poder recorrer las sesiones de forma más suave
-			Session session = tcp.getSessions().get(i);
-			
-			//creo una condición para iniciar a pintar los personajes, si existen dos
-			//if(tcp.getSessions().size()==2) {
-				//System.out.println( tcp.getSessions().size());
+		if(!endGame) {
+			for(int i=0; i< tcp.getSessions().size(); i++) {
+				//esto es para poder recorrer las sesiones de forma más suave
+				Session session = tcp.getSessions().get(i);
 				
-				if(tcp.getSessions().size()==2) {
-					fill(0);
-					textSize(25);
-					if(i%2==0) {
-						session.getPlayer().setApp(this);
-						session.getPlayer().setImg(loadImage("./../media/img/PersonajeJ1.png"));
-						session.getPlayer().setName(msg);
-						
-					}else {
-						session.getPlayer().setApp(this);
-						session.getPlayer().setImg(loadImage("./../media/img/PersonajeJ2.png"));
-						session.getPlayer().setName(msg);
+				//creo una condición para iniciar a pintar los personajes, si existen dos
+				//if(tcp.getSessions().size()==2) {
+					//System.out.println( tcp.getSessions().size());
+					
+					if(tcp.getSessions().size()==2) {
+						fill(0);
+						textSize(25);
+						if(i%2==0) {
+							session.getPlayer().setApp(this);
+							session.getPlayer().setImg(loadImage("./../media/img/PersonajeJ1.png"));
+							
+						}else {
+							session.getPlayer().setApp(this);
+							session.getPlayer().setImg(loadImage("./../media/img/PersonajeJ2.png"));
+						}
+						session.getPlayer().paint(session.getPlayer().getPosX(), session.getPlayer().getPosY());	
 					}
-					session.getPlayer().paint(session.getPlayer().getPosX(), session.getPlayer().getPosY());	
-				}
-			//}
+				//}
+			}
+			
+			if(tcp.getSessions().size()==2) {
+				
+				//prueba.paint();
+				impactBullet(tcp.getSessions().get(0),tcp.getSessions().get(1));
+				endGame();
+			}
+		} else {
+			if(tcp.getSessions().get(0).getPlayer().compareTo(tcp.getSessions().get(1).getPlayer())) {
+				text("Ganador: "+tcp.getSessions().get(1).getPlayer().getName(),width/2,height/2);
+			} else {
+				text("Ganador: "+tcp.getSessions().get(0).getPlayer().getName(),width/2,height/2);
+			}
+			
 		}
 		
-		if(tcp.getSessions().size()==2) {
-			
-			//prueba.paint();
-			impactBullet(tcp.getSessions().get(0),tcp.getSessions().get(1));
-		}
 		
 	}
 	
@@ -91,7 +101,7 @@ public class Main extends PApplet implements OnMessageListener{
 						&& a.getPlayer().getBullets().get(a.getPlayer().getBullets().size()-1).getPosX()<b.getPlayer().getPosX()+50 
 						&& a.getPlayer().getBullets().get(a.getPlayer().getBullets().size()-1).getPosY()>b.getPlayer().getPosY()-50
 						&& a.getPlayer().getBullets().get(a.getPlayer().getBullets().size()-1).getPosY()<b.getPlayer().getPosY()+100) {
-					b.getPlayer().setLife(b.getPlayer().getLife()-5);
+					b.getPlayer().setLife(b.getPlayer().getLife()-a.getPlayer().getBullets().get(a.getPlayer().getBullets().size()-1).getDamage());
 					a.getPlayer().getBullets().remove(a.getPlayer().getBullets().size()-1);
 					System.out.println(b.getPlayer().getLife());
 				} else {
@@ -107,7 +117,7 @@ public class Main extends PApplet implements OnMessageListener{
 						&& b.getPlayer().getBullets().get(b.getPlayer().getBullets().size()-1).getPosX()<a.getPlayer().getPosX()+50 
 						&& b.getPlayer().getBullets().get(b.getPlayer().getBullets().size()-1).getPosY()>a.getPlayer().getPosY()-50
 						&& b.getPlayer().getBullets().get(b.getPlayer().getBullets().size()-1).getPosY()<a.getPlayer().getPosY()+100) {
-					a.getPlayer().setLife(a.getPlayer().getLife()-5);
+					a.getPlayer().setLife(a.getPlayer().getLife()-a.getPlayer().getBullets().get(a.getPlayer().getBullets().size()-1).getDamage());
 					b.getPlayer().getBullets().remove(b.getPlayer().getBullets().size()-1);
 					System.out.println(b.getPlayer().getLife());
 				} else {
@@ -135,12 +145,22 @@ public class Main extends PApplet implements OnMessageListener{
 	}
 	
 
+	public void endGame() {
+		for(int i=0; i< tcp.getSessions().size(); i++) {
+			if(tcp.getSessions().size()==2) {
+				if(tcp.getSessions().get(i).getPlayer().getLife()<=0){
+					endGame = true;
+				}
+			}
+		}
+	}
+	
+	
 	@Override
 	public void OnMessage(Session s,String msg) {
 		
 		// TODO Auto-generated method stub
-		//s.getPlayer().setName(msg);
-		System.out.println(s.getID());
+		s.getPlayer().setName(msg);
 	}
 
 	@Override
@@ -158,6 +178,8 @@ public class Main extends PApplet implements OnMessageListener{
 		b.setPosY(s.getPlayer().getPosY());
 		s.getPlayer().getBullets().add(b);
 	}
+	
+	
 	
 	
 

@@ -26,7 +26,7 @@ public class Session extends Thread{
 	public Session(Socket socket) {
 		this.socket = socket;
 		this.id = UUID.randomUUID().toString();
-		this.player = new Player(null, null, this.id, 100, "Pistol");
+		this.player = new Player(null, null, null, 100, "Pistol");
 	}
 	
 	public void setObserver(OnMessageListener observer) {

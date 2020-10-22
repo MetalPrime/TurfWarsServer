@@ -29,23 +29,28 @@ public class Player {
 	public  void paint(int posX, int posY) {
 		this.posX = posX;
 		this.posY = posY;
-		//System.out.println("name"+name);
-		//app.text(name, posX,posY-10);
+		if(name!=null) {
+			app.text(name, posX,posY-10);
+		}
+	
 		app.image(img, posX, posY);
 		for(int i = 0; i<this.bullets.size(); i++) {
 			app.ellipse(this.bullets.get(i).getPosX()+50, this.bullets.get(i).getPosY()+80, 50, 50);
 			switch(weapon) {
 			case "Pistol":
 				app.image(app.loadImage("./../media/img/ArmaPistola.png"), posX+50, posY+80);
-				this.bullets.get(i).setMov(3);
+				this.bullets.get(i).setMov(10);
+				this.bullets.get(i).setDamage(5);
 				break;
 			case "Rifle":
 				app.image(app.loadImage("./../media/img/ArmaRifle.png"), posX+50, posY+80);
-				this.bullets.get(i).setMov(18);
+				this.bullets.get(i).setMov(20);
+				this.bullets.get(i).setDamage(15);
 				break;
 			case "Shotgun":
 				app.image(app.loadImage("./../media/img/ArmaEscopeta.png"), posX+50, posY+80);
-				this.bullets.get(i).setMov(10);
+				this.bullets.get(i).setMov(15);
+				this.bullets.get(i).setDamage(10);
 				break;
 			}
 			
@@ -117,6 +122,16 @@ public class Player {
 
 	public void setWeapon(String weapon) {
 		this.weapon = weapon;
+	}
+
+	public boolean compareTo(Player o) {
+		// TODO Auto-generated method stub
+		if(this.getLife()<o.getLife()) {
+			return true;
+		}else {
+			return false;
+		}
+		
 	}
 	
 	
