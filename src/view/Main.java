@@ -20,13 +20,11 @@ public class Main extends PApplet implements OnMessageListener{
 	
 	private TCPServer tcp;
 	private String msg;
-	private Session session;
+	
 	private Gson gson;
 	private Player playerJ1;
-	private Player playerJ2;
 	private PowerUp prueba;
 	
-	private int x,y;
 	
 	public void settings() {
 		size(1400,800);
@@ -37,65 +35,128 @@ public class Main extends PApplet implements OnMessageListener{
 		tcp.setObserver(this);
 		gson = new Gson();
 		
-		
-		if(tcp.getSessions().size()<2) {
-			
-			playerJ1 = new Player(this, loadImage("./../media/img/PersonajeJ1.png"), msg, 50, "Pistol" );
-		}
-		
-		prueba = new PowerUp(this, (int)random(0,2),(int) random(0,1200), (int)random(0,700));;
-		
-		
-			
+		prueba = new PowerUp(this, (int)random(0,2),(int) random(0,200), (int)random(0,200));
 		
 	}
 	
 	public void draw() {
 		background(180);
-		if(msg !=null) {
-			fill(0);
-			text(msg, x, y);
-			for(int i=0; i< tcp.getSessions().size(); i++) {
-				session = tcp.getSessions().get(i);
-				playerJ1.paint(x,y);
-			}
+		//veo quien esta conetado
+		for(int i=0; i< tcp.getSessions().size(); i++) {
+			//esto es para poder recorrer las sesiones de forma más suave
+			Session session = tcp.getSessions().get(i);
+			
+			//creo una condición para iniciar a pintar los personajes, si existen dos
+			//if(tcp.getSessions().size()==2) {
+				//System.out.println( tcp.getSessions().size());
+				
+				if(tcp.getSessions().size()==2) {
+					fill(0);
+					textSize(25);
+					if(i%2==0) {
+						session.getPlayer().setApp(this);
+						session.getPlayer().setImg(loadImage("./../media/img/PersonajeJ1.png"));
+						session.getPlayer().setName(msg);
+						
+					}else {
+						session.getPlayer().setApp(this);
+						session.getPlayer().setImg(loadImage("./../media/img/PersonajeJ2.png"));
+						session.getPlayer().setName(msg);
+					}
+					session.getPlayer().paint(session.getPlayer().getPosX(), session.getPlayer().getPosY());	
+				}
+			//}
 		}
 		
-		
-		
+		if(tcp.getSessions().size()==2) {
+			
+			//prueba.paint();
+			impactBullet(tcp.getSessions().get(0),tcp.getSessions().get(1));
+		}
 		
 	}
 	
-	public void impactBullet() {
+	public void impactBullet(Session a,Session b) {
+		
+		//if(tcp.getSessions().size()==2) {
+			///si bala le pega a jugador 1
+			if(a.getPlayer().getBullets().size()>0) {
+				
+				//System.out.println("hay balas");
+				/*System.out.println(a.getPlayer().getBullets().get(a.getPlayer().getBullets().size()-1).getPosX()+"y"+
+						a.getPlayer().getBullets().get(a.getPlayer().getBullets().size()-1).getPosY() + " " + 
+						b.getPlayer().getPosX() + b.getPlayer().getPosY());*/
+				
+				if(a.getPlayer().getBullets().get(a.getPlayer().getBullets().size()-1).getPosX()>b.getPlayer().getPosX()
+						&& a.getPlayer().getBullets().get(a.getPlayer().getBullets().size()-1).getPosX()<b.getPlayer().getPosX()+50 
+						&& a.getPlayer().getBullets().get(a.getPlayer().getBullets().size()-1).getPosY()>b.getPlayer().getPosY()-50
+						&& a.getPlayer().getBullets().get(a.getPlayer().getBullets().size()-1).getPosY()<b.getPlayer().getPosY()+100) {
+					b.getPlayer().setLife(b.getPlayer().getLife()-5);
+					a.getPlayer().getBullets().remove(a.getPlayer().getBullets().size()-1);
+					System.out.println(b.getPlayer().getLife());
+				} else {
+					if(a.getPlayer().getBullets().get(a.getPlayer().getBullets().size()-1).getPosX()>1220) {
+						a.getPlayer().getBullets().remove(a.getPlayer().getBullets().size()-1);
+					}
+				}
+						
+			}
+			
+			if(b.getPlayer().getBullets().size()>0) {
+				if(b.getPlayer().getBullets().get(b.getPlayer().getBullets().size()-1).getPosX()>a.getPlayer().getPosX()
+						&& b.getPlayer().getBullets().get(b.getPlayer().getBullets().size()-1).getPosX()<a.getPlayer().getPosX()+50 
+						&& b.getPlayer().getBullets().get(b.getPlayer().getBullets().size()-1).getPosY()>a.getPlayer().getPosY()-50
+						&& b.getPlayer().getBullets().get(b.getPlayer().getBullets().size()-1).getPosY()<a.getPlayer().getPosY()+100) {
+					a.getPlayer().setLife(a.getPlayer().getLife()-5);
+					b.getPlayer().getBullets().remove(b.getPlayer().getBullets().size()-1);
+					System.out.println(b.getPlayer().getLife());
+				} else {
+					if(b.getPlayer().getBullets().get(b.getPlayer().getBullets().size()-1).getPosX()>1220) {
+						b.getPlayer().getBullets().remove(b.getPlayer().getBullets().size()-1);
+					}
+				}
+			}
+			
+			
+			
+		//}
 		
 	}
 	
-	public void mouseClicked() {
-		
+	public void takePowerup() {
+		if(tcp.getSessions().size()==2) {
+			if(playerJ1.getPosX()>prueba.getPosX() && playerJ1.getPosX()<prueba.getPosX()+50
+					&& playerJ1.getPosY()>prueba.getPosY() && playerJ1.getPosY()<prueba.getPosY()+50) {
+				System.out.println("probando 1,2,3");
+				playerJ1.setWeapon(prueba.getName());
+				playerJ1.getBullets().get(playerJ1.getBullets().size()-1).setMov(10);
+			}
+		}
 	}
+	
 
 	@Override
 	public void OnMessage(Session s,String msg) {
 		
 		// TODO Auto-generated method stub
-		this.msg = msg+ " "+ s.getID();
+		//s.getPlayer().setName(msg);
+		System.out.println(s.getID());
 	}
 
 	@Override
 	public void newPosition(Session s, int x, int y) {
 		// TODO Auto-generated method stub
-		System.out.println(s.getID()+" "+x +"  " +y);
-		this.x = x;
-		this.y = y;
-		//System.out.println(x +" " + y);
+		s.getPlayer().setPosX(x);
+		s.getPlayer().setPosY(y);
+		System.out.println(s.getPlayer().getPosX() +" " + s.getPlayer().getPosY());
 	}
 
 	@Override
-	public void newBullet(Bullet b) {
+	public void newBullet(Session s,Bullet b) {
 		// TODO Auto-generated method stub
-		b.setPosX(x);
-		b.setPosY(y);
-		playerJ1.getBullets().add(b);
+		b.setPosX(s.getPlayer().getPosX());
+		b.setPosY(s.getPlayer().getPosY());
+		s.getPlayer().getBullets().add(b);
 	}
 	
 	

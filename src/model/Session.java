@@ -19,10 +19,14 @@ public class Session extends Thread{
 	private BufferedWriter writer;
 	private BufferedReader reader;
 	private OnMessageListener observer;
+	private Player player;
 	
+	
+
 	public Session(Socket socket) {
 		this.socket = socket;
 		this.id = UUID.randomUUID().toString();
+		this.player = new Player(null, null, this.id, 100, "Pistol");
 	}
 	
 	public void setObserver(OnMessageListener observer) {
@@ -42,9 +46,9 @@ public class Session extends Thread{
 	        
 	        
 	        while (true){
-	        	System.out.println("Esperando Mensaje");
+	        	//System.out.println("Esperando Mensaje");
 	        	String line = reader.readLine();
-	        	System.out.println("Recibido:"+" "+line);
+	        	//System.out.println("Recibido:"+" "+line);
 	        	
 	        	Gson gson = new Gson();
 	        	Generic generic = gson.fromJson(line, Generic.class);
@@ -60,7 +64,7 @@ public class Session extends Thread{
 	        		break;
 	        	case "Bullet":
 	        		Bullet bullet = gson.fromJson(line,Bullet.class);
-	        		this.observer.newBullet(bullet);
+	        		this.observer.newBullet(this,bullet);
 	        		break;
 	        	}
 	        	
@@ -94,6 +98,14 @@ public class Session extends Thread{
 
 	public void setID(String id) {
 		this.id = id;
+	}
+	
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 	
 

@@ -37,7 +37,7 @@ public class PowerUp {
 		}
 		
 		
-		app.image(img, posY, posY);
+		app.image(img, this.posX, this.posY);
 	}
 
 	public PImage getImg() {

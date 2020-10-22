@@ -29,31 +29,39 @@ public class Player {
 	public  void paint(int posX, int posY) {
 		this.posX = posX;
 		this.posY = posY;
+		//System.out.println("name"+name);
+		//app.text(name, posX,posY-10);
 		app.image(img, posX, posY);
-		
 		for(int i = 0; i<this.bullets.size(); i++) {
-			app.ellipse(this.bullets.get(i).getPosX(), this.bullets.get(i).getPosY(), 50, 50);
+			app.ellipse(this.bullets.get(i).getPosX()+50, this.bullets.get(i).getPosY()+80, 50, 50);
 			switch(weapon) {
 			case "Pistol":
-				app.image(app.loadImage("./../media/img/ArmaPistola.png"), posX, posY);
+				app.image(app.loadImage("./../media/img/ArmaPistola.png"), posX+50, posY+80);
 				this.bullets.get(i).setMov(3);
 				break;
 			case "Rifle":
-				app.image(app.loadImage("./../media/img/ArmaRifle.png"), posX, posY);
+				app.image(app.loadImage("./../media/img/ArmaRifle.png"), posX+50, posY+80);
+				this.bullets.get(i).setMov(18);
 				break;
 			case "Shotgun":
-				app.image(app.loadImage("./../media/img/ArmaEscopeta.png"), posX, posY);
+				app.image(app.loadImage("./../media/img/ArmaEscopeta.png"), posX+50, posY+80);
+				this.bullets.get(i).setMov(10);
 				break;
 			}
-			if(weapon.equals("Pistol")) {
-				app.image(img, posX, posY+30);
-			}
+			
 			this.bullets.get(i).move();
 		}
 	}
 	
 	
 	
+	public PApplet getApp() {
+		return app;
+	}
+
+	public void setApp(PApplet app) {
+		this.app = app;
+	}
 
 	public String getName() {
 		return name;

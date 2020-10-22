@@ -7,5 +7,5 @@ public interface OnMessageListener {
 	
 	public void newPosition(Session s,int x, int y);
 	
-	public void  newBullet(Bullet b);
+	public void  newBullet(Session s,Bullet b);
 }
