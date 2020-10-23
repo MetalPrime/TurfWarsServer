@@ -19,8 +19,8 @@ public class Bullet {
 		this.setDamage(damage);
 	}
 	
-	public void move() {
-		this.posX+=this.mov;
+	public void move(int dir) {
+		this.posX+=this.mov*dir;
 	}
 
 	public String getType() {

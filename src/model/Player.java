@@ -13,6 +13,7 @@ public class Player {
 	private int posX;
 	private int posY;
 	private int life;
+	private int dir;
 	private ArrayList<Bullet> bullets;
 	private String weapon;
 	
@@ -26,7 +27,7 @@ public class Player {
 		this.weapon = weapon;
 	}
 	
-	public  void paint(int posX, int posY) {
+	public  void paint(int posX, int posY,int dir) {
 		this.posX = posX;
 		this.posY = posY;
 		if(name!=null) {
@@ -54,7 +55,7 @@ public class Player {
 				break;
 			}
 			
-			this.bullets.get(i).move();
+			this.bullets.get(i).move(dir);
 		}
 	}
 	
@@ -132,6 +133,14 @@ public class Player {
 			return false;
 		}
 		
+	}
+
+	public int getDir() {
+		return dir;
+	}
+
+	public void setDir(int dir) {
+		this.dir = dir;
 	}
 	
 	

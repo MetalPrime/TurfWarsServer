@@ -24,20 +24,27 @@ public class PowerUp {
 			break;
 		case 1:
 			this.name = "Shotgun";
-			
+			break;
+		case 2:
+			this.name = "Pistol";
+				break;
 		}
 	}
 	
 	public void paint() {
-		if(this.name.equals("Rilfe")) {
+		if(this.name.equals("Rifle")) {
 			this.img = app.loadImage("./../media/img/balaPowerupRifle.png");
 		}
 		if(this.name.equals("Shotgun")) {
 			this.img = app.loadImage("./../media/img/balaPowerupEscopeta.png");
 		}
+		if(this.name.equals("Pistol")) {
+			this.img = app.loadImage("./../media/img/balaPowerupPistola.png");
+		}
+		if(this.img!=null) {
+			app.image(this.img, this.posX, this.posY);
+		}
 		
-		
-		app.image(img, this.posX, this.posY);
 	}
 
 	public PImage getImg() {

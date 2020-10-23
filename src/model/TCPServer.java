@@ -51,6 +51,14 @@ public class TCPServer extends Thread{
 				session.start();
 				System.out.println("Conexión asegurada");
 				sessions.add(session);
+				
+				if(sessions.size()==2) {
+					sessions.get(0).getPlayer().setPosX(300);
+					sessions.get(0).getPlayer().setPosY(600/2);
+					
+					sessions.get(1).getPlayer().setPosX(900);
+					sessions.get(1).getPlayer().setPosY(600/2);
+				}
 			}
 	
 			
