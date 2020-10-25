@@ -49,10 +49,19 @@ public class Main extends PApplet implements OnMessageListener{
 	public void draw() {
 		PImage back =  loadImage("./../media/img/MenuVacio.png");
 		background(back);
-		
+		fill(255);
+		textSize(25);
+		textFont(font);
+		textLeading(50);
 		if(tcp.getSessions().size()==0 || tcp.getSessions().size()==1) {
-			image(loadImage("./../media/img/Titulo.png"),300,50);
-			
+			image(loadImage("./../media/img/Titulo.png"),300,20);
+			text("derrota a tu adversario del color opuesto dispara"+ "\n" +
+			"y esquiva ataques de tu adversario haz uso de las balas "  +"\n"+ 
+			"que aparecen para cambiar de tipo de arma, " +"\n" +
+			"cada una tiene diferentes velocidadades y"+"\n"+ 
+			" cadencias de tiro.",50,200);
+			textSize(40);
+			text("Esperando Jugadores...",300,500);
 		}
 		
 		//veo quien esta conetado
