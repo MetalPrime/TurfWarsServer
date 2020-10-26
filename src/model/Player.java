@@ -36,20 +36,22 @@ public class Player {
 	
 		app.image(img, posX, posY);
 		for(int i = 0; i<this.bullets.size(); i++) {
-			app.ellipse(this.bullets.get(i).getPosX()+50, this.bullets.get(i).getPosY()+80, 50, 50);
 			switch(weapon) {
 			case "Pistol":
 				app.image(app.loadImage("./../media/img/ArmaPistola.png"), posX+50, posY+80);
+				app.image(app.loadImage("./../media/img/balasCombatePistola.png"),this.bullets.get(i).getPosX()+50, this.bullets.get(i).getPosY()+80);
 				this.bullets.get(i).setMov(10);
 				this.bullets.get(i).setDamage(5);
 				break;
 			case "Rifle":
 				app.image(app.loadImage("./../media/img/ArmaRifle.png"), posX+50, posY+80);
+				app.image(app.loadImage("./../media/img/balasCombateRifle.png"),this.bullets.get(i).getPosX()+50, this.bullets.get(i).getPosY()+80);
 				this.bullets.get(i).setMov(20);
 				this.bullets.get(i).setDamage(15);
 				break;
 			case "Shotgun":
 				app.image(app.loadImage("./../media/img/ArmaEscopeta.png"), posX+50, posY+80);
+				app.image(app.loadImage("./../media/img/balasCombateEscopeta.png"),this.bullets.get(i).getPosX()+50, this.bullets.get(i).getPosY()+80);
 				this.bullets.get(i).setMov(15);
 				this.bullets.get(i).setDamage(10);
 				break;

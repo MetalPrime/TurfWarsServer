@@ -121,10 +121,11 @@ public class Main extends PApplet implements OnMessageListener{
 				endGame();
 			}
 		} else {
+			textSize(40);
 			if(tcp.getSessions().get(0).getPlayer().compareTo(tcp.getSessions().get(1).getPlayer())) {
-				text("Ganador: "+tcp.getSessions().get(1).getPlayer().getName(),width/2,height/2);
+				text("Ganador: "+tcp.getSessions().get(1).getPlayer().getName(),width/2-100,height/2);
 			} else {
-				text("Ganador: "+tcp.getSessions().get(0).getPlayer().getName(),width/2,height/2);
+				text("Ganador: "+tcp.getSessions().get(0).getPlayer().getName(),width/2-100,height/2);
 			}
 			
 		}
@@ -134,45 +135,41 @@ public class Main extends PApplet implements OnMessageListener{
 	
 	public void impactBullet(Session a,Session b) {
 		
-
-			if(a.getPlayer().getBullets().size()>0) {
+		for(int i=0; i<a.getPlayer().getBullets().size(); i++) {
+			if(a.getPlayer().getBullets().get(i).getPosX()>b.getPlayer().getPosX()
+					&& a.getPlayer().getBullets().get(i).getPosX()<b.getPlayer().getPosX()+70 
+					&& a.getPlayer().getBullets().get(i).getPosY()>b.getPlayer().getPosY()-50
+					&& a.getPlayer().getBullets().get(i).getPosY()<b.getPlayer().getPosY()+120) {
+				b.getPlayer().setLife(b.getPlayer().getLife()-a.getPlayer().getBullets().get(i).getDamage());
+				a.getPlayer().getBullets().remove(i);
+				System.out.println(b.getPlayer().getLife());
 				
-			
-				
-				if(a.getPlayer().getBullets().get(a.getPlayer().getBullets().size()-1).getPosX()>b.getPlayer().getPosX()
-						&& a.getPlayer().getBullets().get(a.getPlayer().getBullets().size()-1).getPosX()<b.getPlayer().getPosX()+50 
-						&& a.getPlayer().getBullets().get(a.getPlayer().getBullets().size()-1).getPosY()>b.getPlayer().getPosY()-50
-						&& a.getPlayer().getBullets().get(a.getPlayer().getBullets().size()-1).getPosY()<b.getPlayer().getPosY()+100) {
-					b.getPlayer().setLife(b.getPlayer().getLife()-a.getPlayer().getBullets().get(a.getPlayer().getBullets().size()-1).getDamage());
-					a.getPlayer().getBullets().remove(a.getPlayer().getBullets().size()-1);
-					System.out.println(b.getPlayer().getLife());
-					
-					if(b.getPlayer().getLife()==50) {
-						Life life = new Life("Media");
-						String line = gson.toJson(life);
-						b.sendMessages(line);
-					} if(b.getPlayer().getLife()==25){
-						Life life = new Life("Baja");
-						String line = gson.toJson(life);
-						b.sendMessages(line);	
-					}
-				} else {
-					if(a.getPlayer().getBullets().get(a.getPlayer().getBullets().size()-1).getPosX()>1220) {
-						a.getPlayer().getBullets().remove(a.getPlayer().getBullets().size()-1);
-					}
+				if(b.getPlayer().getLife()==50) {
+					Life life = new Life("Media");
+					String line = gson.toJson(life);
+					b.sendMessages(line);
+				} if(b.getPlayer().getLife()==25){
+					Life life = new Life("Baja");
+					String line = gson.toJson(life);
+					b.sendMessages(line);	
 				}
-						
+			} else {
+				if(a.getPlayer().getBullets().get(i).getPosX()>1220) {
+					a.getPlayer().getBullets().remove(i);
+				}
 			}
-			
-			if(b.getPlayer().getBullets().size()>0) {
-				if(b.getPlayer().getBullets().get(b.getPlayer().getBullets().size()-1).getPosX()>a.getPlayer().getPosX()
-						&& b.getPlayer().getBullets().get(b.getPlayer().getBullets().size()-1).getPosX()<a.getPlayer().getPosX()+50 
-						&& b.getPlayer().getBullets().get(b.getPlayer().getBullets().size()-1).getPosY()>a.getPlayer().getPosY()-50
-						&& b.getPlayer().getBullets().get(b.getPlayer().getBullets().size()-1).getPosY()<a.getPlayer().getPosY()+100) {
+		}
+
+		for(int i=0; i<b.getPlayer().getBullets().size(); i++) {
+
+				if(b.getPlayer().getBullets().get(i).getPosX()>a.getPlayer().getPosX()
+						&& b.getPlayer().getBullets().get(i).getPosX()<a.getPlayer().getPosX()+70 
+						&& b.getPlayer().getBullets().get(i).getPosY()>a.getPlayer().getPosY()-50
+						&& b.getPlayer().getBullets().get(i).getPosY()<a.getPlayer().getPosY()+120) {
 					
 					
-					a.getPlayer().setLife(a.getPlayer().getLife()-b.getPlayer().getBullets().get(b.getPlayer().getBullets().size()-1).getDamage());
-					b.getPlayer().getBullets().remove(b.getPlayer().getBullets().size()-1);
+					a.getPlayer().setLife(a.getPlayer().getLife()-b.getPlayer().getBullets().get(i).getDamage());
+					b.getPlayer().getBullets().remove(i);
 					System.out.println(b.getPlayer().getLife());
 					
 					if(a.getPlayer().getLife()==50) {
@@ -186,8 +183,8 @@ public class Main extends PApplet implements OnMessageListener{
 					}
 					
 				} else {
-					if(b.getPlayer().getBullets().get(b.getPlayer().getBullets().size()-1).getPosX()>1220) {
-						b.getPlayer().getBullets().remove(b.getPlayer().getBullets().size()-1);
+					if(b.getPlayer().getBullets().get(i).getPosX()>1220) {
+						b.getPlayer().getBullets().remove(i);
 					}
 				}
 			}
@@ -258,6 +255,7 @@ public class Main extends PApplet implements OnMessageListener{
 		b.setPosX(s.getPlayer().getPosX());
 		b.setPosY(s.getPlayer().getPosY());
 		s.getPlayer().getBullets().add(b);
+	
 	}
 	
 	
